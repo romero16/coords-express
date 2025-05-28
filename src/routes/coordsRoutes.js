@@ -3,7 +3,7 @@ const router = express.Router();
 const coordsController = require('../controllers/coordsController');
 
 router.post('/save', coordsController.saveCoords);
-router.get('/getAll', coordsController.getCoords);
+router.get('/find-all', coordsController.getCoords);
 
 
 module.exports = router;
