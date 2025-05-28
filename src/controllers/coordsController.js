@@ -5,8 +5,8 @@ const coordsService = require('../services/coordsService');
 const saveCoords = async (req, res) => {
   const coords = req.body;
 
-  if (!Array.isArray(coords)) {
-    return res.status(400).json({ error: 'Debe enviar un array de coordenadas.' });
+  if (typeof coords.lat !== 'number' || typeof coords.lng !== 'number') {
+    return res.status(400).json({ error: 'Debe enviar lat y lng como números.' });
   }
 
   try {
