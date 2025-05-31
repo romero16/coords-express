@@ -16,7 +16,6 @@ const io = socketIo(server,{
 });
 
 
-// Middleware
 app.use(bodyParser.json());
 
 app.use((req, res, next) => {
@@ -37,7 +36,6 @@ io.on('connection', socket => {
   });
 });
 
-// Iniciar servidor con socket
 server.listen(process.env.HOST_PORT, () => {
   console.log(`API corriendo en ${process.env.HOST_NAME}:${process.env.HOST_PORT}`);
 });
