@@ -1,12 +1,20 @@
-const authorizeRole = (requiredRole) => {
-  return (req, res, next) => {
-    if (!req.user) return res.status(401).json({ message: 'No autenticado' });
+const HttpStatus = require('../enums/status.enum');
 
-    if (req.user.role !== requiredRole) {
-      return res.status(403).json({ message: 'No autorizado' });
+const authorizeRole = (...requiredRoles) => {
+  return (req, res, next) => {
+    const user = req.user;
+    
+    const userRoles = Array.isArray(user.role) ? user.role : [user.role];
+
+    const hasValidRole = requiredRoles.some((role) =>
+      userRoles.includes(role)
+    );
+
+    if (hasValidRole) {
+      return next();
     }
 
-    next();
+    return res.status(HttpStatus.UNAUTHORIZED).json({statusCode: HttpStatus.UNAUTHORIZED,  message: 'Acceso no autorizado!' });
   };
 };
 
