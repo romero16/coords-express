@@ -4,6 +4,7 @@ const http = require('http');
 const socketIo = require('socket.io');
 const coordsRoutes = require('./src/routes/coordsRoutes');
 const usersRoutes = require('./src/routes/authRoutes');
+const { swaggerUi, specs } = require('./src/documentation/swagger');
 require('dotenv').config();
 
 const app = express();
@@ -24,6 +25,7 @@ app.use((req, res, next) => {
 });
 
 // Rutas
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 app.use('/api/v1/coords', coordsRoutes);
 app.use('/api/v1/auth', usersRoutes);
 
