@@ -78,8 +78,7 @@ async function refreshToken(req, res){
       statusCode: HttpStatus.OK,
       message: 'Token renovado exitosamente.',
       data: {
-        token: newAccessToken,
-        refresh_token: refreshToken,
+        token: newAccessToken
       },
     });
   });
