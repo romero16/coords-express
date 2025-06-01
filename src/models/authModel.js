@@ -1,15 +1,11 @@
 const { dbMySQL } = require('../config/db');
 const bcryptjs = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const HttpStatus = require('../enums/status.enum');
 require('dotenv').config();
 
 async function login(data, res) {
   try {
-    // const userResult = await dbMySQL('users as u')
-    //   .where({ email: data.email, /* active: 1, deleted_at: null */ })
-    //   .join('model_has_roles mhr on u.id = mhr.model_id')
-    //   .select('u.id', 'u.email', 'u.password', /*'active', 'deleted_at'*/ )
-    //   .first();
 
     const userResult = await dbMySQL('users as u')
       .join('model_has_roles as mhr', 'u.id', 'mhr.model_id')
@@ -25,37 +21,72 @@ async function login(data, res) {
         dbMySQL.raw('JSON_ARRAYAGG(r.name) as roles')
       )
       .first();
-
-      console.log(userResult);
-
     if (!userResult) {
       return res.status(400).json({ error: 'Credenciales incorrectas' });
     }
 
     const validPassword = await bcryptjs.compare(data.password, userResult.password);
     if (!validPassword) {
-      return res.status(400).json({ error: 'Credenciales incorrectas' });
+
+      return res.status(HttpStatus.UNAUTHORIZED).json({statusCode: HttpStatus.UNAUTHORIZED,  message: 'Credenciales incorrectas!' });
     }
 
-    const token = jwt.sign(
-      {
-        id: userResult.id,
-        email: userResult.email
-      },
-      process.env.JWTKEY,
-      { expiresIn: '1h' }
-    );
+    const values = {
+      id: userResult.id,
+      email: userResult.email,
+      role: userResult.roles,
+    };
 
-    res.json({
-      message: 'Login exitoso',
-      token,
-    });
+
+    const token = jwt.sign(values, process.env.JWTKEY, { expiresIn: process.env.TOKEN_EXPIRATION });
+    const refreshToken = jwt.sign(values, process.env.JWT_REFRESH_KEY, { expiresIn: process.env.REFRESH_EXPIRATION });
+
+    res.status(HttpStatus.OK).json({statusCode: HttpStatus.OK,  message: 'Login exitoso', data: {token:token, refresh_token:refreshToken}});
   } catch (error) {
-    res.status(500).json({ mensaje: error.message });
+    res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({statusCode: HttpStatus.INTERNAL_SERVER_ERROR,  message: error.message });
   }
 }
 
+async function refreshToken(req, res){
+  const refreshToken = req.body.refresh_token;
+  if (!refreshToken) {
+    return res.status(HttpStatus.UNAUTHORIZED).json({
+      statusCode: HttpStatus.UNAUTHORIZED,
+      message: 'Token de actualización no proporcionado.',
+    });
+  }
+
+  jwt.verify(refreshToken, process.env.JWT_REFRESH_KEY, (err, user) => {
+    if (err) {
+      return res.status(HttpStatus.FORBIDDEN).json({
+        statusCode: HttpStatus.FORBIDDEN,
+        message: 'Refresh token inválido o expirado.',
+      });
+    }
+
+    const data = {
+      id: user.id,
+      email: user.email,
+      role: user.role,
+    };
+
+    const newAccessToken = jwt.sign(data, process.env.JWTKEY, {
+      expiresIn: process.env.TOKEN_EXPIRATION,
+    });
+
+    return res.status(HttpStatus.OK).json({
+      statusCode: HttpStatus.OK,
+      message: 'Token renovado exitosamente.',
+      data: {
+        token: newAccessToken,
+        refresh_token: refreshToken,
+      },
+    });
+  });
+}
+
 module.exports = {
-  login
+  login,
+  refreshToken
 };
 
