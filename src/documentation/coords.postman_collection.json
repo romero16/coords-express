@@ -1,0 +1,152 @@
+{
+	"info": {
+		"_postman_id": "d5b15433-e8f9-4518-a318-b863cc2f2589",
+		"name": "coords",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "13822551"
+	},
+	"item": [
+		{
+			"name": "save",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjEsImVtYWlsIjoicGFydG5lckBkZXNvZnR3YXJlLm14Iiwicm9sZSI6WyJjbGllbnQiLCJwYXJ0bmVyIl0sImlhdCI6MTc0ODc5NjY0NSwiZXhwIjoxNzQ4ODI1NDQ1fQ.4r5osCF2rK4paJ1BSlWFgKI4KiXE6hneJL49elghbtk",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"driverId\": \"20\",\n  \"coordinates\":[\n  [-104.3336, 19.0522], // Manzanillo centro\n  [-104.2745, 19.1007], // Salida de Manzanillo por carretera\n  [-104.1041, 19.2228], // Tecomán, Colima\n  [-103.8456, 19.2752], // Colima capital\n  [-103.6690, 19.3157], // Villa de Álvarez\n  [-103.4004, 19.4553], // Cerca de Ciudad Guzmán\n  [-103.1670, 19.6728], // Sayula, Jalisco\n  [-103.0307, 19.8851], // Zacoalco de Torres\n  [-103.5401, 20.3964], // Entrada sur de Guadalajara\n  [-103.3496, 20.6597]  // Guadalajara centro\n]\n\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/api/v1/coords/save",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"v1",
+						"coords",
+						"save"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"email\": \"partner@desoftware.mx\",\r\n  \"password\": \"12345678\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/api/v1/auth/login",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"v1",
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "find-all",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjEsImVtYWlsIjoicGFydG5lckBkZXNvZnR3YXJlLm14Iiwicm9sZSI6WyJjbGllbnQiLCJwYXJ0bmVyIl0sImlhdCI6MTc0ODc5NjY0NSwiZXhwIjoxNzQ4ODI1NDQ1fQ.4r5osCF2rK4paJ1BSlWFgKI4KiXE6hneJL49elghbtk",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3000/api/v1/coords/find-all/20",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"v1",
+						"coords",
+						"find-all",
+						"20"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "refresh",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjEsImVtYWlsIjoicGFydG5lckBkZXNvZnR3YXJlLm14Iiwicm9sZSI6WyJjbGllbnQiLCJwYXJ0bmVyIl0sImlhdCI6MTc0ODczNjQxNywiZXhwIjoxNzQ4NzM2NDI3fQ.CVoKvAc42eNw7hj0u5-01AhIF0l8EHmpNt_kF438T0k",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"refresh_token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjEsImVtYWlsIjoicGFydG5lckBkZXNvZnR3YXJlLm14Iiwicm9sZSI6WyJjbGllbnQiLCJwYXJ0bmVyIl0sImlhdCI6MTc0ODc0MTE4MiwiZXhwIjoxNzQ4NzQxMzYyfQ.Isgm9XzW87FQwqcO1MvML04j0adEbMGRhm2fDeRDVd8\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/api/v1/auth/refresh",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"v1",
+						"auth",
+						"refresh"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

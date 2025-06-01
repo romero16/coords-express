@@ -1,13 +1,30 @@
 const { dbMongo } = require('../config/db');
 const mongoose = require('mongoose');
 
-const coordSchema  = new mongoose.Schema({
-  lat: Number,
-  lng: Number,
+const routeSchema = new mongoose.Schema({
+  path: {
+    type: {
+      type: String,
+      enum: ['LineString'],
+      required: true,
+      default: 'LineString'
+    },
+    coordinates: {
+      type: [[Number]],
+      required: true,
+    }
+  },
+  driver: {
+    type: Number,
+    required: true,
+  },
   timestamp: {
     type: Date,
     default: Date.now
   }
 });
 
-module.exports = dbMongo.model('Coord', coordSchema);
+routeSchema.index({ path: '2dsphere' });
+
+module.exports = dbMongo.model('Route', routeSchema);
+
