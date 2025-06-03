@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "d5b15433-e8f9-4518-a318-b863cc2f2589",
+		"_postman_id": "81c4cf84-dfd4-492d-8a85-71044ba77a89",
 		"name": "coords",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "13822551"
+		"_exporter_id": "41867141"
 	},
 	"item": [
 		{
@@ -14,7 +14,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjEsImVtYWlsIjoicGFydG5lckBkZXNvZnR3YXJlLm14Iiwicm9sZSI6WyJjbGllbnQiLCJwYXJ0bmVyIl0sImlhdCI6MTc0ODc5NjY0NSwiZXhwIjoxNzQ4ODI1NDQ1fQ.4r5osCF2rK4paJ1BSlWFgKI4KiXE6hneJL49elghbtk",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJjYXJyaWVyX2lkIjoxLCJzaGlwcGluZ19pZCI6MSwiZW1haWwiOiJyYWZhZWxAZGVzb2Z0d2FyZS5teCIsInJvbGUiOlsiUHJvdmVlZG9yIiwiVHJhbnNwb3J0aXN0YSJdLCJpYXQiOjE3NDg5ODc5MDEsImV4cCI6MTc0ODk5MTUwMX0.YFRe6a4BcfdmPpC-fvdiYoO7IEkNKXKfZXQgoF-bfdo",
 							"type": "string"
 						}
 					]
@@ -23,7 +23,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"driverId\": \"20\",\n  \"coordinates\":[\n  [-104.3336, 19.0522], // Manzanillo centro\n  [-104.2745, 19.1007], // Salida de Manzanillo por carretera\n  [-104.1041, 19.2228], // Tecomán, Colima\n  [-103.8456, 19.2752], // Colima capital\n  [-103.6690, 19.3157], // Villa de Álvarez\n  [-103.4004, 19.4553], // Cerca de Ciudad Guzmán\n  [-103.1670, 19.6728], // Sayula, Jalisco\n  [-103.0307, 19.8851], // Zacoalco de Torres\n  [-103.5401, 20.3964], // Entrada sur de Guadalajara\n  [-103.3496, 20.6597]  // Guadalajara centro\n]\n\n}\n",
+					"raw": "[\n    [ -104, 19],\n    [ -104.0000661, 19]\n]",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -53,7 +53,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"email\": \"partner@desoftware.mx\",\r\n  \"password\": \"12345678\"\r\n}",
+					"raw": "{\r\n  \"email\": \"rafael@desoftware.mx\",\r\n  \"password\": \"123456\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -77,14 +77,14 @@
 			"response": []
 		},
 		{
-			"name": "find-all",
+			"name": "current-route",
 			"request": {
 				"auth": {
 					"type": "bearer",
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjEsImVtYWlsIjoicGFydG5lckBkZXNvZnR3YXJlLm14Iiwicm9sZSI6WyJjbGllbnQiLCJwYXJ0bmVyIl0sImlhdCI6MTc0ODc5NjY0NSwiZXhwIjoxNzQ4ODI1NDQ1fQ.4r5osCF2rK4paJ1BSlWFgKI4KiXE6hneJL49elghbtk",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJjYXJyaWVyX2lkIjoxLCJzaGlwcGluZ19pZCI6MSwicm9sZSI6WyJQcm92ZWVkb3IiLCJUcmFuc3BvcnRpc3RhIl0sImlhdCI6MTc0ODk5Mjk1NSwiZXhwIjoxNzQ4OTk2NTU1fQ.0VAkeTuNkL2Mz_72uEQeb9oYLN6dVJMW5eBvPg7JoIQ",
 							"type": "string"
 						}
 					]
@@ -92,7 +92,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "localhost:3000/api/v1/coords/find-all/20",
+					"raw": "localhost:3000/api/v1/coords/current-route",
 					"host": [
 						"localhost"
 					],
@@ -101,8 +101,55 @@
 						"api",
 						"v1",
 						"coords",
-						"find-all",
-						"20"
+						"current-route"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "current-route",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJjYXJyaWVyX2lkIjoxLCJzaGlwcGluZ19pZCI6MSwicm9sZSI6WyJQcm92ZWVkb3IiLCJUcmFuc3BvcnRpc3RhIl0sImlhdCI6MTc0ODk5MTU4NCwiZXhwIjoxNzQ4OTk1MTg0fQ.DFYv-OM7OJY_cMkm1jZaKMeaU-ZS7UqJP03WPXEaldw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3000/api/v1/coords/find-all",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"v1",
+						"coords",
+						"find-all"
+					],
+					"query": [
+						{
+							"key": "user_id",
+							"value": "2",
+							"disabled": true
+						},
+						{
+							"key": "carrier_id",
+							"value": "1",
+							"disabled": true
+						},
+						{
+							"key": "shipping_id",
+							"value": "1",
+							"disabled": true
+						}
 					]
 				}
 			},
@@ -125,7 +172,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"refresh_token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjEsImVtYWlsIjoicGFydG5lckBkZXNvZnR3YXJlLm14Iiwicm9sZSI6WyJjbGllbnQiLCJwYXJ0bmVyIl0sImlhdCI6MTc0ODc0MTE4MiwiZXhwIjoxNzQ4NzQxMzYyfQ.Isgm9XzW87FQwqcO1MvML04j0adEbMGRhm2fDeRDVd8\"\r\n}",
+					"raw": "{\r\n  \"refresh_token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJjYXJyaWVyX2lkIjoxLCJzaGlwcGluZ19pZCI6MSwicm9sZSI6WyJQcm92ZWVkb3IiLCJUcmFuc3BvcnRpc3RhIl0sImlhdCI6MTc0ODk4ODUyMiwiZXhwIjoxNzQ5NTkzMzIyfQ.ZarGgaGJmh7IcUcEK-80bK2i5iHCdhLykGwHipcruAA\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
