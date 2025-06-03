@@ -10,19 +10,24 @@ async function login(data, res) {
     const userResult = await dbMySQL('users as u')
       .join('model_has_roles as mhr', 'u.id', 'mhr.model_id')
       .join('roles as r', 'mhr.role_id', 'r.id')
+      .join('carrier_users as cu', 'u.id', 'cu.user_id')
+      .join('shipping_requests as sr', 'cu.carrier_id', 'sr.carrier_id')
       .where('u.email', data.email)
-      // .where('u.active', 1)
-      // .whereNull('u.deleted_at')
+      .where('u.active', 1)
+      .where('sr.status_id','asignado')
+      .whereNull('u.deleted_at')
       .groupBy('u.id', 'u.email', 'u.password')
       .select(
-        'u.id',
+        'u.id as user_id',
+        'cu.carrier_id',
+        'sr.id as shipping_id',
         'u.email',
         'u.password',
         dbMySQL.raw('JSON_ARRAYAGG(r.name) as roles')
       )
       .first();
     if (!userResult) {
-      return res.status(400).json({ error: 'Credenciales incorrectas' });
+       return res.status(HttpStatus.UNAUTHORIZED).json({statusCode: HttpStatus.UNAUTHORIZED,  message: 'Credenciales incorrectas'});
     }
 
     const validPassword = await bcryptjs.compare(data.password, userResult.password);
@@ -32,9 +37,10 @@ async function login(data, res) {
     }
 
     const values = {
-      id: userResult.id,
-      email: userResult.email,
-      role: userResult.roles,
+      user_id: userResult.user_id,
+      carrier_id: userResult.carrier_id,
+      shipping_id: userResult.shipping_id,
+      role: JSON.parse(userResult.roles),
     };
 
 
@@ -65,8 +71,9 @@ async function refreshToken(req, res){
     }
 
     const data = {
-      id: user.id,
-      email: user.email,
+      user_id: user.user_id,
+      carrier_id: user.carrier_id,
+      shipping_id: user.shipping_id,
       role: user.role,
     };
 

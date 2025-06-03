@@ -6,6 +6,7 @@ const coordsRoutes = require('./src/routes/coordsRoutes');
 const usersRoutes = require('./src/routes/authRoutes');
 const { swaggerUi, specs } = require('./src/documentation/swagger');
 require('dotenv').config();
+require('./src/jobs/scheduler');
 
 const app = express();
 const server = http.createServer(app);

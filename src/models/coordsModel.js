@@ -14,7 +14,15 @@ const routeSchema = new mongoose.Schema({
       required: true,
     }
   },
-  driver: {
+  user_id: {
+    type: Number,
+    required: true,
+  },
+    carrier_id: {
+    type: Number,
+    required: true,
+  },
+    shipping_id: {
     type: Number,
     required: true,
   },
