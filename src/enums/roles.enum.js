@@ -1,9 +1,10 @@
 const Role = {
-  ROOT: 'ROOT',
-  ADMIN: 'ADMIN',
-  USER: 'USER',
+  ROOT: 'Root',
+  ADMIN: 'Administrador',
+  CARRIER: 'Transportista',
   CUSTOMER: 'client',
-  PARTNER: 'partner'
+  PROVIDER: 'Proveedor',
+  COMERCIAL: 'Comercial'
 };
 
 module.exports = { Role };

@@ -7,8 +7,9 @@ const authorizeRole = require('../midlewares/role');
 const { Role } = require('../enums/roles.enum');
 
 
-router.post('/save', authenticated, authorizeRole(Role.CUSTOMER), coordsController.saveCoordsToRoute);
-router.get('/find-all/:driverId',authenticated, authorizeRole(Role.CUSTOMER), coordsController.getRoute);
+router.post('/save', authenticated, authorizeRole(Role.CARRIER, Role.CARRIER), coordsController.saveCoordsToRoute);
+router.get('/find-all',authenticated, authorizeRole(Role.CARRIER), coordsController.getRoute);
+router.get('/find-all/:driverId',authenticated, authorizeRole(Role.CARRIER), coordsController.getRoute);
 
 
 module.exports = router;
