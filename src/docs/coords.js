@@ -4,6 +4,57 @@
  *   name: Coordenadas
  *   description: Endpoints para rutas geoespaciales
  */
+/**
+ * @swagger
+ * /api/v1/coords/find-all:
+ *   get:
+ *     summary: Obtener todas las rutas guardadas o friltradas
+ *     tags: [Coordenadas]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: user_id
+ *         schema:
+ *           type: integer
+ *         required: false
+ *         description: ID del usuario
+ *       - in: query
+ *         name: carrier_id
+ *         schema:
+ *           type: integer
+ *         required: false
+ *         description: ID de la transportista
+ *       - in: query
+ *         name: shipping_id
+ *         schema:
+ *           type: integer
+ *         required: false
+ *         description: ID del envío
+ *     responses:
+ *       200:
+ *         description: Lista de rutas
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 statusCode:
+ *                   type: integer
+ *                   example: 200
+ *                 message:
+ *                   type: string
+ *                   example: "Rutas obtenidas correctamente"
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/Ruta'
+ *       400:
+ *         description: Parámetro faltante o inválido
+ *       500:
+ *         description: Error del servidor
+ */
+
 
 /**
  * @swagger
@@ -18,25 +69,14 @@
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             required:
- *               - driverId
- *               - coordinates
- *             properties:
- *               driverId:
- *                 type: string
- *                 description: ID del chofer
- *                 example: "665a13c1c2b88f36b0b6abcd"
- *               coordinates:
- *                 type: array
- *                 items:
- *                   type: array
- *                   items:
- *                     type: number
- *                 example:
- *                   - [-99.1332, 19.4326]
- *                   - [-99.134, 19.434]
- *                   - [-99.135, 19.4355]
+ *             type: array
+ *             items:
+ *               type: array
+ *               items:
+ *                 type: number
+ *             example:
+ *               - [-104, 19]
+ *               - [-104.0000661, 19]
  *     responses:
  *       201:
  *         description: Coordenadas guardadas exitosamente
@@ -50,21 +90,15 @@
  *         description: Error del servidor
  */
 
+
 /**
  * @swagger
- * /api/v1/coords/find-all/{driverId}:
+ * /api/v1/coords/current-route:
  *   get:
- *     summary: Obtener todas las rutas guardadas para un conductor específico
+ *     summary: Obtiene la ruta actual mediante el token
  *     tags: [Coordenadas]
  *     security:
  *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: driverId
- *         schema:
- *           type: string
- *         required: true
- *         description: ID del conductor para filtrar las rutas
  *     responses:
  *       200:
  *         description: Lista de rutas

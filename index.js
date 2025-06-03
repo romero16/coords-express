@@ -4,7 +4,7 @@ const http = require('http');
 const socketIo = require('socket.io');
 const coordsRoutes = require('./src/routes/coordsRoutes');
 const usersRoutes = require('./src/routes/authRoutes');
-const { swaggerUi, specs } = require('./src/documentation/swagger');
+const { swaggerUi, specs } = require('./src/docs/swagger');
 require('dotenv').config();
 require('./src/jobs/scheduler');
 

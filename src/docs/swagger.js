@@ -22,7 +22,7 @@ const options = {
   },
   // apis: ['./src/routes/*.js'],
   apis: [
-    './src/documentation/*.js'
+    './src/docs/*.js'
   ]
 };
 

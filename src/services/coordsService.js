@@ -114,9 +114,48 @@ const cacheKey = `routes_cache_user_${user_id}_carrier_${carrier_id}_shipping_${
   return data;
 };
 
+const getRouteFilter = async (req) =>{
+        const { user_id, carrier_id, shipping_id } = req.query;
+        const filters = {};
+        if (user_id) { filters.user_id = user_id}
+        if (carrier_id) {filters.carrier_id = carrier_id}
+        if (shipping_id) { filters.shipping_id = shipping_id}
+
+      const bufferKey = `routes_buffer_user_${user_id}_carrier_${carrier_id}_shipping_${shipping_id}`;
+      const cacheKey = `routes_cache_user_${user_id}_carrier_${carrier_id}_shipping_${shipping_id}`;
+
+        const cached = await redisClient.get(cacheKey);
+        const bufferData = await redisClient.get(bufferKey);
+
+        let data = [];
+
+        if (cached) {
+          data = JSON.parse(cached);
+        } else {
+          data = await Route.find(filters).sort({ timestamp: -1 });
+          await redisClient.setEx(cacheKey, 60, JSON.stringify(data));
+        }
+
+        if (bufferData) {
+          const bufferCoords = JSON.parse(bufferData);
+          if (data.length > 0) {
+            data[0].path.coordinates.push(...bufferCoords);
+          } else {
+            data = [{
+              path: {
+                coordinates: bufferCoords
+              }
+            }];
+          }
+        }
+
+        return data;
+}
+
 
 module.exports = {
   saveCoordsToRoute,
-  getRoute
+  getRoute,
+  getRouteFilter
 };
 

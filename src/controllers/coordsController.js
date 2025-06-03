@@ -54,7 +54,26 @@ const getRoute = async (req, res) => {
   }
 };
 
+const getRouteFilter =  async (req, res) => {
+    try {
+    const data = await coordsService.getRouteFilter(req);
+    res.status(HttpStatus.OK).json({
+      statusCode: HttpStatus.OK,
+      message: data.length > 0 && data[0].path?.coordinates?.length > 0 ? 'Datos obtenidos correctamente' : 'No se encontraron registros.',
+      data:  data.length > 0 && data[0].path?.coordinates?.length > 0 ? data : []
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+      statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+      message: 'Error interno del servidor'
+    });
+  }
+
+};
+
 module.exports = {
   saveCoordsToRoute,
-  getRoute
+  getRoute,
+  getRouteFilter
 };
