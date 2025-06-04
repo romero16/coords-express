@@ -16,14 +16,15 @@ async function login(data, res) {
       .where('u.active', 1)
       .where('sr.status_id','asignado')
       .whereNull('u.deleted_at')
-      .groupBy('u.id', 'u.email', 'u.password')
+      .groupBy('u.id', 'u.email', 'u.password','cu.carrier_id', 'sr.id')
       .select(
         'u.id as user_id',
         'cu.carrier_id',
         'sr.id as shipping_id',
         'u.email',
         'u.password',
-        dbMySQL.raw('JSON_ARRAYAGG(r.name) as roles')
+        // dbMySQL.raw('JSON_ARRAYAGG(r.name) as roles')
+        dbMySQL.raw(`CONCAT('[', GROUP_CONCAT(CONCAT('"', r.name, '"')), ']') as roles`)
       )
       .first();
     if (!userResult) {
