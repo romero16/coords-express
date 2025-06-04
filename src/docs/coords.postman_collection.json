@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "81c4cf84-dfd4-492d-8a85-71044ba77a89",
+		"_postman_id": "7a1f7d41-d2da-4eba-a93f-c70eb4384b33",
 		"name": "coords",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "41867141"
+		"_exporter_id": "13822551"
 	},
 	"item": [
 		{
@@ -108,7 +108,7 @@
 			"response": []
 		},
 		{
-			"name": "current-route",
+			"name": "find-all",
 			"request": {
 				"auth": {
 					"type": "bearer",
