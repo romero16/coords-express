@@ -6,7 +6,7 @@ const coordsRoutes = require('./src/routes/coordsRoutes');
 const usersRoutes = require('./src/routes/authRoutes');
 const { swaggerUi, specs } = require('./src/docs/swagger');
 require('dotenv').config();
-require('./src/jobs/scheduler');
+require('./src/jobs/scheduler'); // Job para guardar coordenadas cuando tiene x tiempo de inactividad
 
 const app = express();
 const server = http.createServer(app);

@@ -58,7 +58,7 @@
 
 /**
  * @swagger
- * /api/v1/coords/save:
+ * /api/v1/coords/save-coords:
  *   post:
  *     summary: Guardar o actualizar la ruta de un chofer
  *     tags: [Coordenadas]

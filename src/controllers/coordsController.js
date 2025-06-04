@@ -3,18 +3,11 @@ const HttpStatus = require('../enums/status.enum');
 
 const saveCoordsToRoute = async (req, res) => {
 
-  if (req.body.length === 0) {
-    return res.status(HttpStatus.BAD_REQUEST).json({
-      statusCode: HttpStatus.BAD_REQUEST,
-      message: 'Debe enviar un arreglo no vacío de coordinates'
-    });
-  }
-
   try {
     const resultado = await coordsService.saveCoordsToRoute(req);
 
     if (resultado != null) {
-      req.io.emit('newCoords', resultado);
+      req.io.emit('newCoords', resultado); //para emitir evento de coordenadas guardadas via socket
       return res.status(HttpStatus.CREATED).json({
         statusCode: HttpStatus.CREATED,
         message: 'Ruta actualizada con nuevas coordenadas',
