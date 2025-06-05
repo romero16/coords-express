@@ -1,20 +1,20 @@
 {
 	"info": {
-		"_postman_id": "7a1f7d41-d2da-4eba-a93f-c70eb4384b33",
+		"_postman_id": "81c4cf84-dfd4-492d-8a85-71044ba77a89",
 		"name": "coords",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "13822551"
+		"_exporter_id": "41867141"
 	},
 	"item": [
 		{
-			"name": "save",
+			"name": "save-coords",
 			"request": {
 				"auth": {
 					"type": "bearer",
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJjYXJyaWVyX2lkIjoxLCJzaGlwcGluZ19pZCI6MSwiZW1haWwiOiJyYWZhZWxAZGVzb2Z0d2FyZS5teCIsInJvbGUiOlsiUHJvdmVlZG9yIiwiVHJhbnNwb3J0aXN0YSJdLCJpYXQiOjE3NDg5ODc5MDEsImV4cCI6MTc0ODk5MTUwMX0.YFRe6a4BcfdmPpC-fvdiYoO7IEkNKXKfZXQgoF-bfdo",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJjYXJyaWVyX2lkIjoxLCJzaGlwcGluZ19pZCI6MSwidHJpcF90eXBlIjoxLCJyb2xlIjpbIlByb3ZlZWRvciIsIlRyYW5zcG9ydGlzdGEiXSwiaWF0IjoxNzQ5MTM1Mjg5LCJleHAiOjE3NDkyMjE2ODl9.euq4gSv5O5CIY96-iaAgFg6LUQlZEAldTC2QnVPo1jo",
 							"type": "string"
 						}
 					]
@@ -23,7 +23,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "[\n    [ -104, 19],\n    [ -104.0000661, 19]\n]",
+					"raw": "[\n    [\n            -101.68570861491011,\n            21.148814051795682\n          ]\n         \n]",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -31,7 +31,7 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:3000/api/v1/coords/save",
+					"raw": "localhost:3000/api/v1/coords/save-coords",
 					"host": [
 						"localhost"
 					],
@@ -40,7 +40,7 @@
 						"api",
 						"v1",
 						"coords",
-						"save"
+						"save-coords"
 					]
 				}
 			},
@@ -84,7 +84,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJjYXJyaWVyX2lkIjoxLCJzaGlwcGluZ19pZCI6MSwicm9sZSI6WyJQcm92ZWVkb3IiLCJUcmFuc3BvcnRpc3RhIl0sImlhdCI6MTc0ODk5Mjk1NSwiZXhwIjoxNzQ4OTk2NTU1fQ.0VAkeTuNkL2Mz_72uEQeb9oYLN6dVJMW5eBvPg7JoIQ",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJjYXJyaWVyX2lkIjoxLCJzaGlwcGluZ19pZCI6MSwidHJpcF90eXBlIjoxLCJyb2xlIjpbIlByb3ZlZWRvciIsIlRyYW5zcG9ydGlzdGEiXSwiaWF0IjoxNzQ5MTMzNjkyLCJleHAiOjE3NDkyMjAwOTJ9.sK9Xh4BxfJU2E0noKnqZHzO79HupMmViw50xYThSgNw",
 							"type": "string"
 						}
 					]
@@ -115,7 +115,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJjYXJyaWVyX2lkIjoxLCJzaGlwcGluZ19pZCI6MSwicm9sZSI6WyJQcm92ZWVkb3IiLCJUcmFuc3BvcnRpc3RhIl0sImlhdCI6MTc0ODk5MTU4NCwiZXhwIjoxNzQ4OTk1MTg0fQ.DFYv-OM7OJY_cMkm1jZaKMeaU-ZS7UqJP03WPXEaldw",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJjYXJyaWVyX2lkIjoxLCJzaGlwcGluZ19pZCI6MSwidHJpcF90eXBlIjoxLCJyb2xlIjpbIlByb3ZlZWRvciIsIlRyYW5zcG9ydGlzdGEiXSwiaWF0IjoxNzQ5MTMzNjkyLCJleHAiOjE3NDkyMjAwOTJ9.sK9Xh4BxfJU2E0noKnqZHzO79HupMmViw50xYThSgNw",
 							"type": "string"
 						}
 					]
@@ -149,6 +149,11 @@
 							"key": "shipping_id",
 							"value": "1",
 							"disabled": true
+						},
+						{
+							"key": "trip_type",
+							"value": "1",
+							"disabled": true
 						}
 					]
 				}
@@ -156,7 +161,68 @@
 			"response": []
 		},
 		{
-			"name": "refresh",
+			"name": "find-one",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJjYXJyaWVyX2lkIjoxLCJzaGlwcGluZ19pZCI6MSwidHJpcF90eXBlIjoxLCJyb2xlIjpbIlByb3ZlZWRvciIsIlRyYW5zcG9ydGlzdGEiXSwiaWF0IjoxNzQ5MTMzNjkyLCJleHAiOjE3NDkyMjAwOTJ9.sK9Xh4BxfJU2E0noKnqZHzO79HupMmViw50xYThSgNw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3000/api/v1/coords/find-one/user/2/carrier/1/shipping/1/type/1",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"v1",
+						"coords",
+						"find-one",
+						"user",
+						"2",
+						"carrier",
+						"1",
+						"shipping",
+						"1",
+						"type",
+						"1"
+					],
+					"query": [
+						{
+							"key": "user_id",
+							"value": "2",
+							"disabled": true
+						},
+						{
+							"key": "carrier_id",
+							"value": "1",
+							"disabled": true
+						},
+						{
+							"key": "shipping_id",
+							"value": "1",
+							"disabled": true
+						},
+						{
+							"key": "trip_type",
+							"value": "1",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "refresh-token",
 			"request": {
 				"auth": {
 					"type": "bearer",
@@ -172,7 +238,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"refresh_token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJjYXJyaWVyX2lkIjoxLCJzaGlwcGluZ19pZCI6MSwicm9sZSI6WyJQcm92ZWVkb3IiLCJUcmFuc3BvcnRpc3RhIl0sImlhdCI6MTc0ODk4ODUyMiwiZXhwIjoxNzQ5NTkzMzIyfQ.ZarGgaGJmh7IcUcEK-80bK2i5iHCdhLykGwHipcruAA\"\r\n}",
+					"raw": "{\r\n  \"refresh_token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJjYXJyaWVyX2lkIjoxLCJzaGlwcGluZ19pZCI6MSwicm9sZSI6WyJQcm92ZWVkb3IiLCJUcmFuc3BvcnRpc3RhIl0sImlhdCI6MTc0ODk4ODUyMiwiZXhwIjoxNzQ5NTkzMzIyfQ.ZarGgaGJmh7IcUcEK-80bK2i5iHCdhLykGwHipcruA\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -180,7 +246,7 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:3000/api/v1/auth/refresh",
+					"raw": "localhost:3000/api/v1/auth/refresh-token",
 					"host": [
 						"localhost"
 					],
@@ -189,7 +255,7 @@
 						"api",
 						"v1",
 						"auth",
-						"refresh"
+						"refresh-token"
 					]
 				}
 			},
