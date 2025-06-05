@@ -36,18 +36,11 @@ const flushBufferToMongo = async (driverKey) => {
   const bufferData = await redisClient.get(bufferKey);
   if (!bufferData) return;
 
-  // Buffer esperado como array de arrays [lng, lat]
   const rawCoords = JSON.parse(bufferData);
-
   // Ignorar si no hay al menos 2 coordenadas (requisito LineString)
   if (rawCoords.length < 2) return;
 
-  // Aquí transformamos cada coordenada añadiendo timestamp actual
-  const coordsWithTimestamps = rawCoords.map(coord => ({
-    point: coord,
-    timestamp: new Date()
-  }));
-
+  const coordsWithTimestamps = rawCoords;
   // Guardar en Mongo con push
   await Route.findOneAndUpdate(
     { user_id, carrier_id, shipping_id, trip_type },

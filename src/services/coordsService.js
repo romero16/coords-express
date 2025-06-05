@@ -163,64 +163,97 @@ const cacheKey = `routes_cache_user_${user_id}_carrier_${carrier_id}_shipping_${
   if (cached) {
     data = JSON.parse(cached);
   } else {
-    data = await Route.find({ user_id, carrier_id, shipping_id, trip_type }).sort({ timestamp: -1 });
+    data = await Route.findOne({ user_id, carrier_id, shipping_id, trip_type }, { coordinates: 1 })
+    data = {
+      user_id,carrier_id,shipping_id,trip_type,
+      coordinates: data.coordinates.map(coord => coord.point)
+    }
     await redisClient.setEx(cacheKey, 60, JSON.stringify(data));
   }
-
   if (bufferData) {
     const bufferCoords = JSON.parse(bufferData);
-    if (data.length > 0) {
-      data[0].coordinates.push(...bufferCoords);
+    if (Array.isArray(data.coordinates)) {
+      data.coordinates.push(...bufferCoords);
     } else {
-      data = [{
-        path: {
-          coordinates: bufferCoords
-        }
-      }];
+      data.coordinates = bufferCoords;
     }
   }
-
+  
   return data;
 };
 
-const getRouteFilter = async (req) =>{
-        const { user_id, carrier_id, shipping_id, trip_type } = req.query;
-        const filters = {};
-        if (user_id) { filters.user_id = user_id}
-        if (carrier_id) {filters.carrier_id = carrier_id}
-        if (shipping_id) { filters.shipping_id = shipping_id}
-        if (trip_type) { filters.trip_type = trip_type}
+const getRouteFilter = async (req) => {
+  const { user_id, carrier_id, shipping_id, trip_type } = req.query;
+  const filters = {};
+  if (user_id) filters.user_id = Number(user_id);
+  if (carrier_id) filters.carrier_id = Number(carrier_id);
+  if (shipping_id) filters.shipping_id = Number(shipping_id);
+  if (trip_type) filters.trip_type = Number(trip_type);
 
-      const bufferKey = `routes_buffer_user_${user_id}_carrier_${carrier_id}_shipping_${shipping_id}_type_${trip_type}`;
-      const cacheKey = `routes_cache_user_${user_id}_carrier_${carrier_id}_shipping_${shipping_id}_type_${trip_type}`;
+  const routes = await Route.find(filters).sort({ timestamp: -1 });
+  const routesWithBuffer = [];
 
-        const cached = await redisClient.get(cacheKey);
-        const bufferData = await redisClient.get(bufferKey);
+  for (const route of routes) {
+    const bufferKey = `routes_buffer_user_${route.user_id}_carrier_${route.carrier_id}_shipping_${route.shipping_id}_type_${route.trip_type}`;
+    const bufferData = await redisClient.get(bufferKey);
+    const bufferCoords = bufferData ? JSON.parse(bufferData) : [];
+    const storedCoords = Array.isArray(route.coordinates) ? route.coordinates.map(c => c.point) : [];
+    const combinedCoords = [...storedCoords, ...bufferCoords];
+    routesWithBuffer.push({
+      user_id: route.user_id,
+      carrier_id: route.carrier_id,
+      shipping_id: route.shipping_id,
+      trip_type: route.trip_type,
+      coordinates: combinedCoords
+    });
+  }
+  return routesWithBuffer;
+};
 
-        let data = [];
 
-        if (cached) {
-          data = JSON.parse(cached);
-        } else {
-          data = await Route.find(filters).sort({ timestamp: -1 });
-          await redisClient.setEx(cacheKey, 60, JSON.stringify(data));
-        }
+// const getRouteFilter = async (req) =>{
+//         const { user_id, carrier_id, shipping_id, trip_type } = req.query;
+//         const filters = {};
+//         if (user_id) { filters.user_id = user_id}
+//         if (carrier_id) {filters.carrier_id = carrier_id}
+//         if (shipping_id) { filters.shipping_id = shipping_id}
+//         if (trip_type) { filters.trip_type = trip_type}
 
-        if (bufferData) {
-          const bufferCoords = JSON.parse(bufferData);
-          if (data.length > 0) {
-            data[0].coordinates.push(...bufferCoords);
-          } else {
-            data = [{
-              path: {
-                coordinates: bufferCoords
-              }
-            }];
-          }
-        }
+//       const bufferKey = `routes_buffer_user_${user_id}_carrier_${carrier_id}_shipping_${shipping_id}_type_${trip_type}`;
+//       const cacheKey = `routes_cache_user_${user_id}_carrier_${carrier_id}_shipping_${shipping_id}_type_${trip_type}`;
 
-        return data;
-}
+//         const cached = await redisClient.get(cacheKey);
+//         const bufferData = await redisClient.get(bufferKey);
+
+//         let data = [];
+
+//         if (cached) {
+//           data = JSON.parse(cached);
+//         } else {
+//           data = await Route.find(filters).sort({ timestamp: -1 });
+//           const formattedData = data.map(route => ({
+//             user_id: route.user_id,
+//             carrier_id: route.carrier_id,
+//             shipping_id: route.shipping_id,
+//             trip_type: route.trip_type,
+//             coordinates: Array.isArray(route.coordinates) 
+//               ? route.coordinates.map(coord => coord.point)
+//               : []
+//           }));
+//           await redisClient.setEx(cacheKey, 60, JSON.stringify(formattedData));
+//         }
+
+//         if (bufferData) {
+//           const bufferCoords = JSON.parse(bufferData);
+//           if (Array.isArray(data.coordinates)) {
+//             data.coordinates.push(...bufferCoords);
+//           } else {
+//             data.coordinates = bufferCoords;
+//           }
+//         }
+
+//         return data;
+// }
 
 
 module.exports = {
