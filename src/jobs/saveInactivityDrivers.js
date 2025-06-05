@@ -37,9 +37,6 @@ const flushBufferToMongo = async (driverKey) => {
   if (!bufferData) return;
 
   const rawCoords = JSON.parse(bufferData);
-  // Ignorar si no hay al menos 2 coordenadas (requisito LineString)
-  if (rawCoords.length < 2) return;
-
   const coordsWithTimestamps = rawCoords;
   // Guardar en Mongo con push
   await Route.findOneAndUpdate(

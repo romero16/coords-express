@@ -5,12 +5,19 @@ const coordsController = require('../controllers/coordsController');
 const authenticated = require('../midlewares/autenticate');
 const authorizeRole = require('../midlewares/role');
 const { Role } = require('../enums/roles.enum');
-const  { saveCoords }  = require('../requests/coords-request');
+const  { saveCoordsRequest, findOneCoordsRequest }  = require('../requests/coords-request');
 
 
-router.post('/save-coords', authenticated, authorizeRole(Role.CARRIER, Role.CARRIER), saveCoords, coordsController.saveCoordsToRoute);
+router.post('/save-coords', authenticated, authorizeRole(Role.CARRIER, Role.CARRIER, Role.ROOT), saveCoordsRequest, coordsController.saveCoordsToRoute);
 router.get('/current-route',authenticated, authorizeRole(Role.CARRIER), coordsController.getRoute);
 router.get('/find-all',authenticated, authorizeRole(Role.CARRIER), coordsController.getRouteFilter);
+
+router.get('/find-one/user/:user_id/carrier/:carrier_id/shipping/:shipping_id/type/:trip_type',
+    authenticated, 
+    authorizeRole(Role.CARRIER), 
+    findOneCoordsRequest, 
+    coordsController.findOne
+);
 
 
 module.exports = router;

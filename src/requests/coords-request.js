@@ -1,6 +1,6 @@
 const HttpStatus = require('../enums/status.enum');
 
-function saveCoords(req, res, next) {
+function saveCoordsRequest(req, res, next) {
   const coords = req.body;
 
   if (!Array.isArray(coords)) {
@@ -42,6 +42,27 @@ function saveCoords(req, res, next) {
   next();
 }
 
+function findOneCoordsRequest(req, res, next) {
+
+  const { user_id, carrier_id, shipping_id, trip_type } = req.params;
+
+  if (!user_id || !carrier_id || !shipping_id || !trip_type) {
+     return res.status(HttpStatus.BAD_REQUEST).json({statusCode: HttpStatus.BAD_REQUEST,  message: 'Todos los filtros (user_id, carrier_id, shipping_id, trip_type) son obligatorios.' });
+  }
+
+  const params = [user_id, carrier_id, shipping_id, trip_type];
+  const allNumbers = params.every(param => /^\d+$/.test(param));
+
+  if (!allNumbers) {
+    return res.status(400).json({
+      statusCode: 400,
+      message: 'Todos los filtros deben ser números enteros positivos.'
+    });
+  }
+  next();
+}
+
 module.exports = {
-  saveCoords
+  saveCoordsRequest,
+  findOneCoordsRequest
 };
