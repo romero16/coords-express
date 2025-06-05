@@ -33,10 +33,12 @@ const saveCoordsToRoute = async (req, res) => {
 const getRoute = async (req, res) => {
   try {
     const data = await coordsService.getRoute(req);
+    const exist = Array.isArray(data?.coordinates) && data.coordinates.length > 0;
+    
     res.status(HttpStatus.OK).json({
       statusCode: HttpStatus.OK,
-      message: data.length > 0 && data[0].path?.coordinates?.length > 0 ? 'Datos obtenidos correctamente' : 'No se encontraron registros.',
-      data:  data.length > 0 && data[0].path?.coordinates?.length > 0 ? data : []
+      message: exist ? 'Datos obtenidos correctamente' : 'No se encontraron registros.',
+      data:  exist ? data : []
     });
   } catch (error) {
     console.error(error);
@@ -50,10 +52,12 @@ const getRoute = async (req, res) => {
 const getRouteFilter =  async (req, res) => {
     try {
     const data = await coordsService.getRouteFilter(req);
+    const exist = Array.isArray(data) && data.some(route => Array.isArray(route.coordinates) && route.coordinates.length > 0);
+
     res.status(HttpStatus.OK).json({
       statusCode: HttpStatus.OK,
-      message: data.length > 0 && data[0].path?.coordinates?.length > 0 ? 'Datos obtenidos correctamente' : 'No se encontraron registros.',
-      data:  data.length > 0 && data[0].path?.coordinates?.length > 0 ? data : []
+      message: exist ? 'Datos obtenidos correctamente' : 'No se encontraron registros.',
+      data: exist ? data : []
     });
   } catch (error) {
     console.error(error);
