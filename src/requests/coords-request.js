@@ -44,13 +44,13 @@ function saveCoordsRequest(req, res, next) {
 
 function findOneCoordsRequest(req, res, next) {
 
-  const { user_id, carrier_id, shipping_id, trip_type } = req.params;
+  const {carrier_id, shipping_id, trip_type } = req.params;
 
-  if (!user_id || !carrier_id || !shipping_id || !trip_type) {
-     return res.status(HttpStatus.BAD_REQUEST).json({statusCode: HttpStatus.BAD_REQUEST,  message: 'Todos los filtros (user_id, carrier_id, shipping_id, trip_type) son obligatorios.' });
+  if (!carrier_id || !shipping_id || !trip_type) {
+     return res.status(HttpStatus.BAD_REQUEST).json({statusCode: HttpStatus.BAD_REQUEST,  message: 'Todos los filtros (carrier_id, shipping_id, trip_type) son obligatorios.' });
   }
 
-  const params = [user_id, carrier_id, shipping_id, trip_type];
+  const params = [carrier_id, shipping_id, trip_type];
   const allNumbers = params.every(param => /^\d+$/.test(param));
 
   if (!allNumbers) {

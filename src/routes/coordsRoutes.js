@@ -12,7 +12,7 @@ router.post('/save-coords', authenticated, authorizeRole(Role.CARRIER, Role.CARR
 router.get('/current-route',authenticated, authorizeRole(Role.CARRIER), coordsController.getRoute);
 router.get('/find-all',authenticated, authorizeRole(Role.CARRIER), coordsController.getRouteFilter);
 
-router.get('/find-one/user/:user_id/carrier/:carrier_id/shipping/:shipping_id/type/:trip_type',
+router.get('/find-one/carrier/:carrier_id/shipping/:shipping_id/type/:trip_type',
     authenticated, 
     authorizeRole(Role.CARRIER), 
     findOneCoordsRequest, 

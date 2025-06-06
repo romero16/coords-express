@@ -5,8 +5,10 @@ const saveCoordsToRoute = async (req, res) => {
 
   try {
     const resultado = await coordsService.saveCoordsToRoute(req);
+    const { carrier_id, shipping_id, trip_type} = req.user;
+    const chanel = `coords_carrier_${carrier_id}_shipping_${shipping_id}_type_${trip_type}`;
     if (resultado != null) {
-      req.io.emit('newCoords', resultado); //para emitir evento de coordenadas guardadas via socket
+      req.io.emit(chanel, resultado);
       return res.status(HttpStatus.CREATED).json({
         statusCode: HttpStatus.CREATED,
         message: 'Ruta actualizada con nuevas coordenadas',

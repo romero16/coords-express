@@ -30,8 +30,8 @@ const flushBufferToMongo = async (driverKey) => {
 
   const { user_id, carrier_id, shipping_id, trip_type } = ids;
 
-  const bufferKey = `routes_buffer_user_${user_id}_carrier_${carrier_id}_shipping_${shipping_id}_type_${trip_type}`;
-  const cacheKey = `routes_cache_user_${user_id}_carrier_${carrier_id}_shipping_${shipping_id}_type_${trip_type}`;
+  const bufferKey = `routes_buffer_carrier_${carrier_id}_shipping_${shipping_id}_type_${trip_type}`;
+  const cacheKey = `routes_cache_carrier_${carrier_id}_shipping_${shipping_id}_type_${trip_type}`;
 
   const bufferData = await redisClient.get(bufferKey);
   if (!bufferData) return;
@@ -53,41 +53,6 @@ const flushBufferToMongo = async (driverKey) => {
   await redisClient.del(cacheKey);
 };
 
-// const flushBufferToMongo = async (driverKey) => {
-//   console.log('Procesando inactivo:', driverKey);
-
-//   const ids = parseDriverKey(driverKey);
-//   if (!ids) {
-//     console.warn('Formato inválido del driverKey:', driverKey);
-//     return;
-//   }
-
-//   const { user_id, carrier_id, shipping_id, trip_type } = ids;
-
-//   const bufferKey = `routes_buffer_user_${user_id}_carrier_${carrier_id}_shipping_${shipping_id}_type_${trip_type}`;
-//   const cacheKey = `routes_cache_user_${user_id}_carrier_${carrier_id}_shipping_${shipping_id}_type_${trip_type}`;
-//   const bufferData = await redisClient.get(bufferKey);
-//   if (!bufferData) return;
-
-//   const buffer = JSON.parse(bufferData);
-
-//   // Ignorar si no hay al menos 2 coordenadas (requisito de LineString)
-//   if (buffer.length < 2) return;
-
-//   // Insertar coordenadas en MongoDB
-//     await Route.findOneAndUpdate(
-//     { user_id, carrier_id, shipping_id, trip_type },
-//     {
-//       $push: { 'path.coordinates': { $each: buffer } },
-//       timestamp: new Date()
-//     },
-//     { new: true, upsert: true, setDefaultsOnInsert: true }
-//   );
-
-//   // Eliminar buffer y cache en Redis
-//   await redisClient.del(bufferKey);
-//   await redisClient.del(cacheKey);
-// };
 
 //FUNCION PRINCIPAL QUE CARGA EL JOB PARA REVISAR LOS CHOFERES
 // QUE TENGAN X TIEMPO SIN ACTIVIDAD
