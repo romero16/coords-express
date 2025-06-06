@@ -3,88 +3,12 @@ const redisClient = require('../config/redis');
 const { getDistance } = require('geolib');
 require('dotenv').config();
 
-
-// const saveCoordsToRoute = async (req) => {
-// const { user_id, carrier_id, shipping_id, trip_type } = req.user;
-
-//  const newCoordinates = req.body;
-
-//   // clave del buffer por chofer
-// const bufferKey = `routes_buffer_user_${user_id}_carrier_${carrier_id}_shipping_${shipping_id}_type_${trip_type}`;
-// const cacheKey = `routes_cache_user_${user_id}_carrier_${carrier_id}_shipping_${shipping_id}_type_${trip_type}`;
-// const redisValue = `user_${user_id}_carrier_${carrier_id}_shipping_${shipping_id}_type_${trip_type}`;
-
-//   // Obteniene buffer actual por cada chofer desde Redis (si existe)
-//   let bufferData = await redisClient.get(bufferKey);
-//   let buffer = bufferData ? JSON.parse(bufferData) : [];
-//   let lastCoord = buffer[buffer.length - 1]; // última coordenada del buffer (si existe)
-
-//   const uniqueNewCoords = newCoordinates.filter(([lng, lat]) => {
-//     // Si no hay coordenada anterior, aceptamos la nueva
-//     if (!lastCoord) {
-//       lastCoord = [lng, lat]; // para futuras comparaciones en este batch
-//       return true;
-//     }
-
-//     const distance = getDistance(
-//       { latitude: lat, longitude: lng },
-//       { latitude: lastCoord[1], longitude: lastCoord[0] }
-//     );
-
-//     if (distance >= process.env.MIN_DISTANCE_METERS) {
-//       lastCoord = [lng, lat]; // actualizar la última aceptada
-//       return true;
-//     }
-//     return false; // está muy cerca, no se guarda
-//   });
-
-//   if (uniqueNewCoords.length === 0) {
-//     return null;
-//   }
-//   // Guardando las coordenadas en buffer
-//   buffer.push(...uniqueNewCoords);
-
-//   // Guarda  las coordenadas en el buffer Redis
-//   await redisClient.set(bufferKey, JSON.stringify(buffer));
-
-//   // Registrar última actividad del conductor en ZSET
-
-//   await redisClient.zAdd('drivers_last_activity', {
-//     score: Date.now(),
-//     value: redisValue.toString()
-//   });
-
-
-//   if (buffer.length < process.env.BATCH_SIZE) {
-//     return uniqueNewCoords;
-//   }
-
-//   // Tomar batch para insertar
-//   const coordsToInsert = buffer.splice(0, process.env.BATCH_SIZE);
-
-//   // Guardar el buffer actualizado en Redis después de sacar batch
-//   await redisClient.set(bufferKey, JSON.stringify(buffer));
-
-//   // Guarda las coordenas en MongoDB
-//   const rutaActualizada = await Route.findOneAndUpdate(
-//     {  user_id, carrier_id, shipping_id, trip_type },
-//     {
-//       $push: { 'path.coordinates': { $each: coordsToInsert } },
-//       timestamp: new Date()
-//     },
-//     { new: true, upsert: true, setDefaultsOnInsert: true }
-//   );
-
-//   await redisClient.del(cacheKey);
-//   return rutaActualizada;
-// };
-
 const saveCoordsToRoute = async (req) => {
   const { user_id, carrier_id, shipping_id, trip_type } = req.user;
   const newCoordinates = req.body;
 
-  const bufferKey = `routes_buffer_user_${user_id}_carrier_${carrier_id}_shipping_${shipping_id}_type_${trip_type}`;
-  const cacheKey = `routes_cache_user_${user_id}_carrier_${carrier_id}_shipping_${shipping_id}_type_${trip_type}`;
+  const bufferKey = `routes_buffer_carrier_${carrier_id}_shipping_${shipping_id}_type_${trip_type}`;
+  const cacheKey = `routes_cache_carrier_${carrier_id}_shipping_${shipping_id}_type_${trip_type}`;
   const redisValue = `user_${user_id}_carrier_${carrier_id}_shipping_${shipping_id}_type_${trip_type}`;
 
   let bufferData = await redisClient.get(bufferKey);
@@ -181,8 +105,8 @@ const saveCoordsToRoute = async (req) => {
 const getRoute = async (req) => {
 const { user_id, carrier_id, shipping_id, trip_type } = req.user;
 
-const bufferKey = `routes_buffer_user_${user_id}_carrier_${carrier_id}_shipping_${shipping_id}_type_${trip_type}`;
-const cacheKey = `routes_cache_user_${user_id}_carrier_${carrier_id}_shipping_${shipping_id}_type_${trip_type}`;
+const bufferKey = `routes_buffer_carrier_${carrier_id}_shipping_${shipping_id}_type_${trip_type}`;
+const cacheKey = `routes_cache_carrier_${carrier_id}_shipping_${shipping_id}_type_${trip_type}`;
 
   const cached = await redisClient.get(cacheKey);
   const bufferData = await redisClient.get(bufferKey);
@@ -215,17 +139,17 @@ const cacheKey = `routes_cache_user_${user_id}_carrier_${carrier_id}_shipping_${
 };
 
 const findOne = async (req) => {
-  const { user_id, carrier_id, shipping_id, trip_type } = req.params;
+  const { carrier_id, shipping_id, trip_type } = req.params;
 
   const filters = {
-    user_id: Number(user_id),
     carrier_id: Number(carrier_id),
     shipping_id: Number(shipping_id),
     trip_type: Number(trip_type),
   };
 
   const routes = await Route.find(filters).sort({ timestamp: -1 });
-  const bufferKey = `routes_buffer_user_${filters.user_id}_carrier_${filters.carrier_id}_shipping_${filters.shipping_id}_type_${filters.trip_type}`;
+  const bufferKey = `routes_buffer_carrier_${filters.carrier_id}_shipping_${filters.shipping_id}_type_${filters.trip_type}`;
+  
   const bufferData = await redisClient.get(bufferKey);
   const bufferCoords = bufferData ? JSON.parse(bufferData) : [];
 
@@ -235,7 +159,7 @@ const findOne = async (req) => {
     for (const route of routes) {
       const storedCoords = Array.isArray(route.coordinates) ? route.coordinates : [];
       result.push({
-        user_id: route.user_id,
+        // user_id: route.user_id,
         carrier_id: route.carrier_id,
         shipping_id: route.shipping_id,
         trip_type: route.trip_type,
@@ -244,7 +168,7 @@ const findOne = async (req) => {
     }
   } else if (bufferCoords.length > 0) {
     result.push({
-      user_id: filters.user_id,
+      // user_id: bufferCoords.user_id,
       carrier_id: filters.carrier_id,
       shipping_id: filters.shipping_id,
       trip_type: filters.trip_type,
