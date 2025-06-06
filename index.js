@@ -5,17 +5,25 @@ const socketIo = require('socket.io');
 const coordsRoutes = require('./src/routes/coordsRoutes');
 const usersRoutes = require('./src/routes/authRoutes');
 const { swaggerUi, specs } = require('./src/docs/swagger');
+const cors = require('cors');
 require('dotenv').config();
 // require('./src/jobs/scheduler'); // Job para guardar coordenadas cuando tiene x tiempo de inactividad
 
 const app = express();
 const server = http.createServer(app);
+
+app.use(cors({
+  origin: '*',
+  methods: ['GET', 'POST']
+}));
+
 const io = socketIo(server,{
   cors: {
     origin: "*", 
     methods: ["GET", "POST"]
   }
 });
+
 
 
 app.use(bodyParser.json());
