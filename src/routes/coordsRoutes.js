@@ -13,9 +13,9 @@ router.get('/current-route',authenticated, authorizeRole(Role.CARRIER), coordsCo
 router.get('/find-all',authenticated, authorizeRole(Role.CARRIER), coordsController.getRouteFilter);
 
 router.get('/find-one/carrier/:carrier_id/shipping/:shipping_id/type/:trip_type',
-    authenticated, 
+   /* authenticated, 
     authorizeRole(Role.CARRIER), 
-    findOneCoordsRequest, 
+    findOneCoordsRequest, */
     coordsController.findOne
 );
 
