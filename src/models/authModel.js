@@ -39,14 +39,15 @@ async function login(data, res) {
       return res.status(HttpStatus.UNAUTHORIZED).json({statusCode: HttpStatus.UNAUTHORIZED,  message: 'Credenciales incorrectas, o sin viajes asignados!' });
     }
 
+
+
     const values = {
       user_id: userResult.user_id,
       carrier_id: userResult.carrier_id,
       shipping_id: userResult.shipping_id,
-      trip_type: userResult.shipping_id,
+      trip_type: userResult.trip_type,
       role: JSON.parse(userResult.roles),
     };
-
 
     const token = jwt.sign(values, process.env.JWTKEY, { expiresIn: process.env.TOKEN_EXPIRATION });
     const refreshToken = jwt.sign(values, process.env.JWT_REFRESH_KEY, { expiresIn: process.env.REFRESH_EXPIRATION });
