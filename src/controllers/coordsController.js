@@ -52,8 +52,7 @@ const getRoute = async (req, res) => {
 const findOne =  async (req, res) => {
     try {
     const data = await coordsService.findOne(req);
-    const exist = Array.isArray(data) && data.some(route => Array.isArray(route.coordinates) && route.coordinates.length > 0);
-
+    const exist = data?.coordinates;
     res.status(HttpStatus.OK).json({
       statusCode: HttpStatus.OK,
       message: exist ? 'Datos obtenidos correctamente' : 'No se encontraron registros.',
