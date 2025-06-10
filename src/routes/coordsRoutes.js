@@ -9,15 +9,14 @@ const  { saveCoordsRequest, findOneCoordsRequest }  = require('../requests/coord
 
 
 router.post('/save-coords', authenticated, authorizeRole(Role.CARRIER, Role.CARRIER, Role.ROOT), saveCoordsRequest, coordsController.saveCoordsToRoute);
-router.get('/current-route',authenticated, authorizeRole(Role.CARRIER), coordsController.getRoute);
-router.get('/find-all',authenticated, authorizeRole(Role.CARRIER), coordsController.getRouteFilter);
-
+router.get('/find-all',authenticated, authorizeRole(Role.ROOT, Role.ADMIN), coordsController.getRouteFilter);
 router.get('/find-one/carrier/:carrier_id/shipping/:shipping_id/type/:trip_type',
-   /* authenticated, 
+   authenticated, 
     authorizeRole(Role.CARRIER), 
-    findOneCoordsRequest, */
+    findOneCoordsRequest,
     coordsController.findOne
 );
+router.get('/current-route',authenticated, authorizeRole(Role.CARRIER), coordsController.getRoute);
 
 
 module.exports = router;

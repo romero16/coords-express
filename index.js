@@ -7,24 +7,24 @@ const usersRoutes = require('./src/routes/authRoutes');
 const { swaggerUi, specs } = require('./src/docs/swagger');
 const cors = require('cors');
 require('dotenv').config();
-// require('./src/jobs/scheduler'); // Job para guardar coordenadas cuando tiene x tiempo de inactividad
+require('./src/jobs/scheduler'); // Job para guardar coordenadas cuando tiene x tiempo de inactividad
 
 const app = express();
 const server = http.createServer(app);
 
+//ESTABLECER AQUI SOLO LAS RUTAS AUTORIZADAS PARA PARA EL API
 app.use(cors({
   origin: '*',
   methods: ['GET', 'POST']
 }));
 
+//ESTABLECER AQUI SOLO LAS RUTAS AUTORIZADAS PARA LA RESPUESTA DEL SOCKET
 const io = socketIo(server,{
   cors: {
     origin: "*", 
     methods: ["GET", "POST"]
   }
 });
-
-
 
 app.use(bodyParser.json());
 
