@@ -5,7 +5,6 @@ async function login(req, res) {
 
    try {
       return await usersService.login(req.body, res);
-      
     } catch (error) {
       res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({statusCode: HttpStatus.INTERNAL_SERVER_ERROR,  message: error.message });
     }

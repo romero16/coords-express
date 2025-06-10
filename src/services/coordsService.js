@@ -205,7 +205,7 @@ const getRouteFilter = async (req) => {
   }else{
         // No hay rutas en la base de datos, buscar claves en Redis
     const redisKeys = await redisClient.keys('routes_buffer_carrier_*');
-    console.log(redisKeys);
+    // console.log(redisKeys);
     //  await redisClient.del(redisKeys);
     for (const key of redisKeys) {
       const match = key.match(/routes_buffer_carrier_(\d+)_shipping_(\d+)_type_(\d+)/);

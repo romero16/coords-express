@@ -1,14 +1,15 @@
 {
-  "name": "coords",
+  "name": "geoapi-desoftware",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js",
     "dev": "nodemon index.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "DESOFTWARE",
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^6.0.0",

@@ -38,17 +38,17 @@ const flushBufferToMongo = async (driverKey) => {
 
   const rawCoords = JSON.parse(bufferData);
   const coordsWithTimestamps = rawCoords;
-  // Guardar en Mongo con push
+
   await Route.findOneAndUpdate(
     { user_id, carrier_id, shipping_id, trip_type },
     {
       $push: { 'coordinates': { $each: coordsWithTimestamps } },
-      timestamp: new Date()  // timestamp general de la ruta
+      timestamp: new Date()
     },
     { new: true, upsert: true, setDefaultsOnInsert: true }
   );
 
-  // Eliminar buffer y cache
+  // Eliminar buffer y cache una vez guardado el registro
   await redisClient.del(bufferKey);
   await redisClient.del(cacheKey);
 };
