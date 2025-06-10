@@ -1,4 +1,4 @@
-const { dbGeoApi } = require('../config/db');
+const { dbMongo } = require('../config/db');
 const mongoose = require('mongoose');
 
 const coordSchema  = new mongoose.Schema({
@@ -10,4 +10,4 @@ const coordSchema  = new mongoose.Schema({
   }
 });
 
-module.exports = dbGeoApi.model('Coord', coordSchema);
+module.exports = dbMongo.model('Coord', coordSchema);
