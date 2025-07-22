@@ -17,27 +17,56 @@ function saveCoordsRequest(req, res, next) {
     });
   }
 
-  for (const coord of coords) {
-    if (
-      !Array.isArray(coord) ||
-      coord.length !== 2 ||
-      typeof coord[0] !== 'number' ||
-      typeof coord[1] !== 'number'
-    ) {
-      return res.status(HttpStatus.BAD_REQUEST).json({
-        statusCode: HttpStatus.BAD_REQUEST,
-        message: 'Cada coordenada debe ser un array de dos números: [lng, lat]'
-      });
-    }
+    // SOLO PARA FORMATO lat y long
 
-    const [lng, lat] = coord;
-    if (lng < -180 || lng > 180 || lat < -90 || lat > 90) {
-      return res.status(HttpStatus.BAD_REQUEST).json({
-        statusCode: HttpStatus.BAD_REQUEST,
-        message: `Coordenada fuera de rango permitido. Recibido lng: ${lng}, lat: ${lat}`
-      });
-    }
+for (const coord of coords) {
+  if (
+    !Array.isArray(coord) ||
+    coord.length !== 2 ||
+    typeof coord[0] !== 'number' ||
+    typeof coord[1] !== 'number'
+  ) {
+    return res.status(HttpStatus.BAD_REQUEST).json({
+      statusCode: HttpStatus.BAD_REQUEST,
+      message: 'Cada coordenada debe ser un array de dos números: [lat, lng]'
+    });
   }
+
+  const [lat, lng] = coord;
+  if (lat < -90 || lat > 90 || lng < -180 || lng > 180) {
+    return res.status(HttpStatus.BAD_REQUEST).json({
+      statusCode: HttpStatus.BAD_REQUEST,
+      message: `Coordenada fuera de rango permitido. Recibido lat: ${lat}, lng: ${lng}`
+    });
+  }
+}
+
+
+
+
+  // SOLO PARA FORMATO lng y lat
+
+  // for (const coord of coords) {
+  //   if (
+  //     !Array.isArray(coord) ||
+  //     coord.length !== 2 ||
+  //     typeof coord[0] !== 'number' ||
+  //     typeof coord[1] !== 'number'
+  //   ) {
+  //     return res.status(HttpStatus.BAD_REQUEST).json({
+  //       statusCode: HttpStatus.BAD_REQUEST,
+  //       message: 'Cada coordenada debe ser un array de dos números: [lng, lat]'
+  //     });
+  //   }
+
+  //   const [lng, lat] = coord;
+  //   if (lng < -180 || lng > 180 || lat < -90 || lat > 90) {
+  //     return res.status(HttpStatus.BAD_REQUEST).json({
+  //       statusCode: HttpStatus.BAD_REQUEST,
+  //       message: `Coordenada fuera de rango permitido. Recibido lng: ${lng}, lat: ${lat}`
+  //     });
+  //   }
+  // }
 
   next();
 }

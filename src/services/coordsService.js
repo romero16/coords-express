@@ -152,6 +152,8 @@ const findOne = async (req) => {
   const bufferData = await redisClient.get(bufferKey);
   const bufferCoords = bufferData ? JSON.parse(bufferData) : [];
 
+    // await redisClient.del(bufferKey); //// AUXILIAR PARA BORRAR DE CACHE LOS REGISTROS, SOLO PARA PRUEBAS
+
   let  result = [];
 
   if (routes.length > 0) {
