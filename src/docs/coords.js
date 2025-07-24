@@ -82,6 +82,12 @@
  *           type: integer
  *         required: true
  *         description: Tipo de ruta
+ *       - in: query
+ *         name: session
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: autentificacion
  *     responses:
  *       200:
  *         description: Ruta encontrada
@@ -191,12 +197,12 @@
  *           example: 1
  *         coordinates:
  *           type: array
- *           description: Arreglo de coordenadas [lng, lat]
+ *           description: Arreglo de coordenadas [lat, lng]
  *           items:
  *             type: array
  *             items:
  *               type: number
  *           example:
- *             - [-104.07304402070609, 19.17470992213383]
- *             - [-104.073056, 19.174722]
+ *             - [ 19.17470992213383, -104.07304402070609]
+ *             - [19.174722, -104.073056]
  */
