@@ -1,14 +1,25 @@
 const coordsService = require('../services/coordsService');
 const HttpStatus = require('../enums/status.enum');
+const socketStore = require('../socketStorage');
+const redisClient = require('../config/redis');
 
 const saveCoordsToRoute = async (req, res) => {
 
   try {
     const resultado = await coordsService.saveCoordsToRoute(req);
+          const sessionIds = socketStore.getAllSessionIds();
     const { carrier_id, shipping_id, trip_type} = req.user;
-    const chanel = `coords_carrier_${carrier_id}_shipping_${shipping_id}_type_${trip_type}`;
     if (resultado != null) {
-      req.io.emit(chanel, resultado);
+ 
+      
+      for (const sessionId of sessionIds) {
+        const redisKey = `session:${sessionId}`;
+        const cachedSession = await redisClient.get(redisKey);
+        if (cachedSession) {
+            const chanel = `session_${sessionId}_coords_carrier_${carrier_id}_shipping_${shipping_id}_type_${trip_type}`;
+            req.io.emit(chanel, resultado);
+        }
+      }
       return res.status(HttpStatus.CREATED).json({
         statusCode: HttpStatus.CREATED,
         message: 'Ruta actualizada con nuevas coordenadas',
@@ -23,10 +34,7 @@ const saveCoordsToRoute = async (req, res) => {
     });
 
   } catch (error) {
-    return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-      statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
-      message: 'Error interno del servidor'
-    });
+   	return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({statusCode: HttpStatus.INTERNAL_SERVER_ERROR,  message: error.message });
   }
 };
 

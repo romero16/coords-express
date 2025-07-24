@@ -96,8 +96,43 @@ async function refreshToken(req, res){
   });
 }
 
+async function loginBySessionId(sessionId, res) {
+    try {
+
+      const user = await dbMySQL('sessions').where('id', sessionId).whereNotNull('user_id').select('user_id').first();
+      if(user){
+        const userResult = await dbMySQL('users as u')
+          .join('model_has_roles as mhr', 'u.id', 'mhr.model_id')
+          .join('roles as r', 'mhr.role_id', 'r.id')
+          .where('u.id', user.user_id)
+          .where('u.active', 1)
+          .whereNull('u.deleted_at')
+          .groupBy('u.id')
+          .select(
+            'u.id as user_id',
+            dbMySQL.raw(`CONCAT('[', GROUP_CONCAT(CONCAT('"', r.name, '"')), ']') as roles`)
+          )
+          .first();
+
+          if (!userResult) {
+            return res.status(HttpStatus.UNAUTHORIZED).json({statusCode: HttpStatus.UNAUTHORIZED,  message: 'Autentificación inválida!'});
+          }
+
+        return {
+          user_id: userResult.user_id,
+          role: JSON.parse(userResult.roles),
+        };
+      }
+		  return null;
+
+    } catch (error) {
+      	return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({statusCode: HttpStatus.INTERNAL_SERVER_ERROR,  message: error.message });
+    }
+}
+
 module.exports = {
   login,
-  refreshToken
+  refreshToken,
+  loginBySessionId
 };
 

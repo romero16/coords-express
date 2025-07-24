@@ -18,7 +18,16 @@ async function refreshToken(req, res){
   }
 }
 
+async function loginBySessionId(data, res) {
+  try {
+    return await usersService.loginBySessionId(req, res);
+  } catch (error) {
+    res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({statusCode: HttpStatus.INTERNAL_SERVER_ERROR,  message: error.message });
+  }
+}
+
 module.exports = {
   login,
-  refreshToken
+  refreshToken,
+  loginBySessionId
 };
