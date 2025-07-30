@@ -4,6 +4,7 @@ const http = require('http');
 const socketIo = require('socket.io');
 const coordsRoutes = require('./src/routes/coordsRoutes');
 const usersRoutes = require('./src/routes/authRoutes');
+const tollRoutes = require('./src/routes/tollsRoutes');
 const { swaggerUi, specs } = require('./src/docs/swagger');
 const socketStore = require('./src/socketStorage');
 const cors = require('cors');
@@ -29,7 +30,7 @@ const io = socketIo(server,{
   }
 });
 
-app.use(bodyParser.json());
+app.use(bodyParser.json({ limit: '5mb' }));
 
 app.use((req, res, next) => {
   req.io = io;
@@ -38,6 +39,7 @@ app.use((req, res, next) => {
 
 // Rutas
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
+app.use('/api/v1/tolls', tollRoutes);
 app.use('/api/v1/coords', coordsRoutes);
 app.use('/api/v1/auth', usersRoutes);
 
