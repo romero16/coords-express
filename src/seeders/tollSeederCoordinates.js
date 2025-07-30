@@ -127,4 +127,8 @@ async function main() {
 
 }
 
-main();
+main().then(() => process.exit()).catch(err => {
+  console.error('❌ Error fatal en main:', err);
+  process.exit(1);
+});
+

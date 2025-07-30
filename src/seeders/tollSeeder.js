@@ -87,4 +87,8 @@ async function main() {
     console.log(`\n✅ Completado: ${inserted} insertados, ${updated} actualizados, ${skipped} omitidos`);
 }
 
-main();
+main().then(() => process.exit()).catch(err => {
+  console.error('❌ Error fatal en main:', err);
+  process.exit(1);
+});
+
