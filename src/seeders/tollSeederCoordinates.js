@@ -119,11 +119,13 @@ const manualCoordinates = async () => {
 }
 
 async function main() {
-    console.log('🔄 Actualizando coordenadas automáticas...');
-    await updateTollRoadCoordinatesFromDataMX();
     console.log('🔄 Aplicando coordenadas manuales desde JSON...');
     await manualCoordinates();
-    console.log(`🟢 Proceso completado!`);
+    console.log('🔄 Actualizando coordenadas automáticas...');
+    await updateTollRoadCoordinatesFromDataMX();
+
+     console.log(`🟢 Proceso completado!`);
+  
 
 }
 
