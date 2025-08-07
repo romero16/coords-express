@@ -6,6 +6,8 @@ const polyline = require('@mapbox/polyline');
 require('dotenv').config();
 
 
+
+//  **********************************OBTENER EL PEAJE DE MANERA LOCAL************************************************************
 // const processRoute = async (req, res) => {
 //   try {
 //     const { coordinates, typeCargo } = req.body;
@@ -50,7 +52,7 @@ require('dotenv').config();
 //       const dot = tangent[0] * toToll[0] + tangent[1] * toToll[1];
 //       const cross = tangent[0] * toToll[1] - tangent[1] * toToll[0];
 
-//       console.log(`Caseta ${toll.via} | dist: ${(dist * 1000).toFixed(2)}m | dot: ${dot.toFixed(6)} | cross: ${cross.toFixed(6)}`);
+//       //console.log(`Caseta ${toll.via} | dist: ${(dist * 1000).toFixed(2)}m | dot: ${dot.toFixed(6)} | cross: ${cross.toFixed(6)}`);
 
 //       return {
 //         toll,
@@ -92,7 +94,7 @@ require('dotenv').config();
 //       return true;
 //     });
 
-//     console.log(`Casetas filtradas (una por tramo, sin duplicados): ${filteredTolls.length}`);
+//     //console.log(`Casetas filtradas (una por tramo, sin duplicados): ${filteredTolls.length}`);
 
 //     if (filteredTolls.length > 0) {
 //       const tollsMapped = filteredTolls.map(({ toll, sense }) => ({
@@ -113,10 +115,10 @@ require('dotenv').config();
 //     return res.status(500).json({ message: error.message });
 //   }
 // };
+//  **********************************--------------------------------************************************************************
 
 
-
-// ************************************************FUNCION PARA PROCESAR DESDE EL API*********************************************
+// ************************************************OBTENER PEAJE DESDE LA API DEL INEGI********************************************
 
 const processRoute = async (req, res) => {
   try {
@@ -176,7 +178,7 @@ const processRoute = async (req, res) => {
         }
 
       }else{
-        return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({statusCode: HttpStatus.INTERNAL_SERVER_ERROR,  message: 'Error en datos de origen y destino!' });
+        return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({statusCode: HttpStatus.INTERNAL_SERVER_ERROR,  message: dataDestination.data.response.message ? dataDestination.data.response.message : dataOrigin.data.response.message });
       }
    
     if (!getTolls.data || !Array.isArray(getTolls.data.data)) {
@@ -237,6 +239,8 @@ const processRoute = async (req, res) => {
     return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({statusCode: HttpStatus.INTERNAL_SERVER_ERROR,  message: error.message });
   }
 };
+
+//  **********************************--------------------------------************************************************************
 
 module.exports = {
   processRoute
