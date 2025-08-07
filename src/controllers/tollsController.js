@@ -3,6 +3,7 @@ const TollRoad = require('../models/tollsModel');
 const axios = require('axios');
 const turf = require('@turf/turf');
 const polyline = require('@mapbox/polyline');
+require('dotenv').config();
 
 
 // const processRoute = async (req, res) => {
@@ -124,7 +125,7 @@ const processRoute = async (req, res) => {
 
       const [dataOrigin, dataDestination] = await Promise.all([
         axios.post(
-          `https://gaia.inegi.org.mx/sakbe_v3.1/buscalinea?escala=10000&x=${origin[0]}&y=${origin[1]}&proj=GRS80&type=json&key=OddXDtiQ-CyeP-TL6r-uxJ0-vK8WB10pHeax`,
+          `${process.env.BUSCALINEA}&x=${origin[0]}&y=${origin[1]}&proj=GRS80&type=json&key=${process.env.TOKEN}`,
           {}, // No borrar el para evitar cierres del servidor
           {
             headers: {
@@ -135,7 +136,7 @@ const processRoute = async (req, res) => {
           }
         ),
         axios.post(
-          `https://gaia.inegi.org.mx/sakbe_v3.1/buscalinea?escala=10000&x=${destination[0]}&y=${destination[1]}&proj=GRS80&type=json&key=OddXDtiQ-CyeP-TL6r-uxJ0-vK8WB10pHeax`,
+          `${process.env.BUSCALINEA}&x=${destination[0]}&y=${destination[1]}&proj=GRS80&type=json&key=${process.env.TOKEN}`,
           {}, // No borrar el para evitar cierres del servidor
           {
             headers: {
@@ -149,7 +150,7 @@ const processRoute = async (req, res) => {
       let  getTolls = [];
       if(dataOrigin.data.data && dataOrigin.data.data?.id_routing_net && dataDestination.data.data?.id_routing_net){
         getTolls = await axios.post(
-          `https://gaia.inegi.org.mx/sakbe_v3.1/detalle_c?id_i=${dataOrigin.data.data.id_routing_net}&id_f=${dataDestination.data.data.id_routing_net}&v=${typeCargo}&source_i=${dataOrigin.data.data.source}&source_f=${dataDestination.data.data.source}&target_i=${dataOrigin.data.data.target}&target_f=${dataDestination.data.data.target}&type=json&proj=GRS80&key=OddXDtiQ-CyeP-TL6r-uxJ0-vK8WB10pHeax`,
+          `${process.env.PEJAE}?id_i=${dataOrigin.data.data.id_routing_net}&id_f=${dataDestination.data.data.id_routing_net}&v=${typeCargo}&source_i=${dataOrigin.data.data.source}&source_f=${dataDestination.data.data.source}&target_i=${dataOrigin.data.data.target}&target_f=${dataDestination.data.data.target}&type=json&proj=GRS80&key=${process.env.TOKEN}`,
           {}, // No borrar el para evitar cierres del servidor
           {
             headers: {
@@ -162,7 +163,7 @@ const processRoute = async (req, res) => {
 
         if(getTolls){
             points = await axios.post(
-            `https://gaia.inegi.org.mx/sakbe_v3.1/cuota?id_i=${dataOrigin.data.data.id_routing_net}&source_i=${dataOrigin.data.data.source}&target_i=${dataOrigin.data.data.target}&id_f=${dataDestination.data.data.id_routing_net}&source_f=${dataDestination.data.data.source}&target_f=${dataDestination.data.data.target}&v=${typeCargo}&type=json&proj=GRS80&key=OddXDtiQ-CyeP-TL6r-uxJ0-vK8WB10pHeax`,
+            `${process.env.COORDINATES}?id_i=${dataOrigin.data.data.id_routing_net}&source_i=${dataOrigin.data.data.source}&target_i=${dataOrigin.data.data.target}&id_f=${dataDestination.data.data.id_routing_net}&source_f=${dataDestination.data.data.source}&target_f=${dataDestination.data.data.target}&v=${typeCargo}&type=json&proj=GRS80&key=${process.env.TOKEN}`,
             {}, // No borrar el para evitar cierres del servidor
             {
               headers: {
@@ -175,11 +176,11 @@ const processRoute = async (req, res) => {
         }
 
       }else{
-        return res.status(500).json({ message: 'Error en datos de origen y destino!' });
+        return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({statusCode: HttpStatus.INTERNAL_SERVER_ERROR,  message: 'Error en datos de origen y destino!' });
       }
    
     if (!getTolls.data || !Array.isArray(getTolls.data.data)) {
-      return res.status(500).json({ message: 'INEGI no devolvió datos válidos para casetas.' });
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({statusCode: HttpStatus.INTERNAL_SERVER_ERROR,  message: 'INEGI no devolvió datos válidos para casetas.' });
     }
     const route = getTolls.data.data;
 
@@ -226,10 +227,14 @@ const processRoute = async (req, res) => {
     });
 
   const totalCost = tollsMapped.reduce((sum, toll) => sum + toll.cost, 0);
-  return res.json({route:route, tolls: tollsMapped, totalCost, distanceValues, durationValues, points: JSON.parse(points.data.data.geojson)});
+  return res.status(HttpStatus.OK).json({
+    statusCode: HttpStatus.OK,
+    message: 'Datos obtenidos correctamente',
+    data:{route:route, tolls: tollsMapped, totalCost, distanceValues, durationValues, points: JSON.parse(points.data.data.geojson)}
+  });
 
   } catch (error) {
-    return res.status(500).json({ message: error.message });
+    return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({statusCode: HttpStatus.INTERNAL_SERVER_ERROR,  message: error.message });
   }
 };
 

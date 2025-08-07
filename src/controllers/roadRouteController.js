@@ -1,8 +1,5 @@
 const HttpStatus = require('../enums/status.enum');
 const RoadRoute = require('../models/roadRoute');
-const axios = require('axios');
-const turf = require('@turf/turf');
-const polyline = require('@mapbox/polyline');
 
 
 const saveRoadRoute = async (req, res) => {
@@ -19,10 +16,9 @@ const saveRoadRoute = async (req, res) => {
     });
 
     const response = await newRoute.save();
-    return res.json(response);
+     return res.status(HttpStatus.OK).json({ statusCode: HttpStatus.OK,message: 'Datos gurdados correctamente',data: response});
   } catch (error) {
-    console.error('Error en processRoute:', error);
-    return res.status(500).json({ message: error.message });
+    return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({statusCode: HttpStatus.INTERNAL_SERVER_ERROR,  message: error.message });
   }
 };
 
