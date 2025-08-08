@@ -14,7 +14,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJjYXJyaWVyX2lkIjoxLCJzaGlwcGluZ19pZCI6MSwidHJpcF90eXBlIjoxLCJyb2xlIjpbIlByb3ZlZWRvciIsIlRyYW5zcG9ydGlzdGEiXSwiaWF0IjoxNzU0NTkwODE5LCJleHAiOjE3NTQ2NzcyMTl9.iHaIHQco9llvEaUIQ_rnTuZnZe7GZCCPfEAfG8-c3po",
 							"type": "string"
 						}
 					]
@@ -23,7 +23,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "[\n    [\n        -106.40041946321037,\n        29.178867370944133\n    ]\n]",
+					"raw": "[\n\n    [19.210389866390166, -103.80597346626723]\n\n]",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -53,7 +53,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"email\": \"user@dominio.mx\",\r\n  \"password\": \"password\"\r\n}",
+					"raw": "{\r\n  \"email\": \"rafael@desoftware.mx\",\r\n  \"password\": \"123456\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -84,7 +84,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJjYXJyaWVyX2lkIjoxLCJzaGlwcGluZ19pZCI6MSwidHJpcF90eXBlIjoxLCJyb2xlIjpbIlByb3ZlZWRvciIsIlRyYW5zcG9ydGlzdGEiXSwiaWF0IjoxNzUzMjgyMjY0LCJleHAiOjE3NTMzNjg2NjR9.bxzCzNiRlKPNPCruNlW6Ww2XAd9WfDfPK243MLXaqm8",
 							"type": "string"
 						}
 					]
@@ -115,7 +115,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJjYXJyaWVyX2lkIjoxLCJzaGlwcGluZ19pZCI6MSwidHJpcF90eXBlIjoxLCJyb2xlIjpbIlByb3ZlZWRvciIsIlRyYW5zcG9ydGlzdGEiXSwiaWF0IjoxNzQ5NTcxMzYyLCJleHAiOjE3NDk2NTc3NjJ9.yce-ZnmFfVj79iixuqeNeLx4vSfkcYxqVNhBoJnK3xk",
 							"type": "string"
 						}
 					]
@@ -156,19 +156,12 @@
 			"name": "find-one",
 			"request": {
 				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "",
-							"type": "string"
-						}
-					]
+					"type": "noauth"
 				},
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "localhost:3000/api/v1/coords/find-one/carrier/1/shipping/1/type/1",
+					"raw": "localhost:3000/api/v1/coords/find-one/carrier/1/shipping/1/type/1?session=X5rpXcX5Z2LRocUnGLQU2ZQ3AEgyHd9Gsj7wMC6B",
 					"host": [
 						"localhost"
 					],
@@ -184,6 +177,12 @@
 						"1",
 						"type",
 						"1"
+					],
+					"query": [
+						{
+							"key": "session",
+							"value": "X5rpXcX5Z2LRocUnGLQU2ZQ3AEgyHd9Gsj7wMC6B"
+						}
 					]
 				}
 			},
