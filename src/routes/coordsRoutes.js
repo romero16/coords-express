@@ -10,7 +10,9 @@ const  { saveCoordsRequest, findOneCoordsRequest }  = require('../requests/coord
 
 
 router.post('/save-coords', authenticated, authorizeRole(Role.CARRIER, Role.ROOT), saveCoordsRequest, coordsController.saveCoordsToRoute);
-router.get('/find-all',authenticated, authorizeRole(Role.ROOT, Role.ADMIN), coordsController.getRouteFilter);
+router.get('/find-all',authenticated, authorizeRole(Role.ROOT, Role.ADMIN), coordsController.getRouteFilter); //USAR PARA POSTMAN
+router.post('/find-all',authenticateSessionId(Role.ROOT), authorizeRole(Role.ROOT, Role.ADMIN), coordsController.getRouteFilters);  // USAR PARA WEB
+
 router.get('/find-one/carrier/:carrier_id/shipping/:shipping_id/type/:trip_type',
     authenticateSessionId(Role.ROOT), 
     authorizeRole(Role.ROOT), 
@@ -18,6 +20,12 @@ router.get('/find-one/carrier/:carrier_id/shipping/:shipping_id/type/:trip_type'
     coordsController.findOne
 );
 router.get('/current-route',authenticated, authorizeRole(Role.CARRIER), coordsController.getRoute);
+
+router.get('/getDataByFilters',
+    authenticateSessionId(Role.ROOT), 
+    authorizeRole(Role.ROOT),
+    coordsController.getDataByFilters
+);
 
 
 module.exports = router;

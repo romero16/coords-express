@@ -96,9 +96,52 @@ const getRouteFilter =  async (req, res) => {
 
 };
 
+const getRouteFilters =  async (req, res) => {
+    try {
+    const data = await coordsService.getRouteFilters(req);
+    const exist = Array.isArray(data) && data.some(route => Array.isArray(route.coordinates) && route.coordinates.length > 0);
+
+    res.status(HttpStatus.OK).json({
+      statusCode: HttpStatus.OK,
+      message: exist ? 'Datos obtenidos correctamente' : 'No se encontraron registros.',
+      data: exist ? data : []
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+      statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+      message: 'Error interno del servidor'
+    });
+  }
+
+};
+
+
+const getDataByFilters =  async (req, res) => {
+  try {
+    const data = await coordsService.getDataByFilters(req);
+    const exist = Array.isArray(data) && data.length > 0;
+
+    res.status(HttpStatus.OK).json({
+      statusCode: HttpStatus.OK,
+      message: exist ? 'Datos obtenidos correctamente' : 'No se encontraron registros.',
+      data: exist ? data : []
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+      statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
+      message: error.message
+    });
+  }
+
+};
+
 module.exports = {
   saveCoordsToRoute,
   getRoute,
   findOne,
-  getRouteFilter
+  getRouteFilter,
+  getDataByFilters,
+  getRouteFilters
 };

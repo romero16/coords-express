@@ -1,4 +1,5 @@
 const Route = require('../models/coordsModel');
+const Mysql = require('../models/authModel');
 const redisClient = require('../config/redis');
 const { getDistance } = require('geolib');
 require('dotenv').config();
@@ -240,6 +241,116 @@ const getRouteFilter = async (req) => {
   return routesWithBuffer;
 };
 
+const getDataByFilters = async (req, res) =>{
+    const by = req.query['data[search]'];
+    const date = [req.query['data[date][0]'] ?? null, req.query['data[date][1]'] ?? null];
+    const filters = await buildFilters({ date: date });
+    let fieldToReturn = null;
+    if (by === 'carrier') {
+      fieldToReturn = 'carrier_id';
+    } else if (by === 'shipping') {
+      fieldToReturn = 'shipping_id';
+    }
+   const ids = await Route.distinct(fieldToReturn, filters);
+
+   if(ids.length > 0){
+      return await Mysql.getInfoFilters({by,ids}, res);
+   }else{
+      return [];
+   }
+
+  
+  
+}
+
+const buildFilters = async ({ date }) => {
+  const filters = {};
+  const [startDateRaw, endDateRaw] = date || [];
+
+  if (startDateRaw || endDateRaw) {
+    filters.timestamp = {};
+
+    if (startDateRaw && startDateRaw !== 'null' && startDateRaw !== '') {
+      const startDate = new Date(startDateRaw);
+      startDate.setUTCHours(0, 0, 0, 0); // Inicio del día
+      filters.timestamp.$gte = startDate;
+    }
+
+    if (endDateRaw && endDateRaw !== 'null' && endDateRaw !== '') {
+      const endDate = new Date(endDateRaw);
+      endDate.setUTCHours(23, 59, 59, 999); // Fin del día
+      filters.timestamp.$lte = endDate;
+    }
+  }
+
+  return filters;
+};
+
+const getRouteFilters = async (req) => {
+  const { search,  carrier, shipping, type } = req.body.data;
+  const resolvedType = type ?? 1;
+
+  const filters = {};
+
+  if (carrier) {
+    filters.carrier_id = Number(carrier);
+    const ids = await Mysql.carrierShippingsRoutes(filters.carrier_id);
+    filters.shipping_id = { $in: ids };
+    
+  }
+  if (shipping) filters.shipping_id = Number(shipping);
+  if (resolvedType) filters.trip_type = Number(resolvedType);
+
+  const routes = await Route.find(filters).sort({ timestamp: -1 });
+  const routesWithBuffer = [];
+  if(routes.length > 0){
+    for (const route of routes) {
+      const bufferKey = `routes_buffer_carrier_${route.carrier_id}_shipping_${route.shipping_id}_type_${route.trip_type}`;
+      const bufferData = await redisClient.get(bufferKey);
+      const bufferCoords = bufferData ? JSON.parse(bufferData) : [];
+      const storedCoords = Array.isArray(route.coordinates) ? route.coordinates.map(c => c.point) : [];
+      const combinedCoords = [...storedCoords, ...bufferCoords.map(c => c.point)];
+      routesWithBuffer.push({
+        carrier_id: route.carrier_id,
+        shipping_id: route.shipping_id,
+        trip_type: route.trip_type,
+        coordinates: combinedCoords
+      });
+    }
+  }else{
+        // No hay rutas en la base de datos, buscar claves en Redis
+    const redisKeys = await redisClient.keys('routes_buffer_carrier_*');
+    // console.log(redisKeys);
+    //  await redisClient.del(redisKeys);
+    for (const key of redisKeys) {
+      const match = key.match(/routes_buffer_carrier_(\d+)_shipping_(\d+)_type_(\d+)/);
+      if (!match) continue;
+
+      const [userId, carrierId, shippingId, tripType ] = match.map(Number);
+      
+      // Si hay filtros aplicados, los comparamos
+      if (
+        (carrier && Number(carrier) !== carrierId) ||
+        (shipping && Number(shipping) !== shippingId) ||
+        (resolvedType && Number(resolvedType) !== tripType)
+      ) {
+        continue;
+      }
+
+      const bufferData = await redisClient.get(key);
+      const bufferCoords = bufferData ? JSON.parse(bufferData) : [];
+      routesWithBuffer.push({
+        carrier_id: carrierId,
+        shipping_id: shippingId,
+        trip_type: tripType,
+        coordinates: bufferCoords.map(c => c.point)
+      });
+    }
+    
+  }
+
+  return routesWithBuffer;
+};
 
 
 
@@ -247,6 +358,8 @@ module.exports = {
   saveCoordsToRoute,
   getRoute,
   findOne,
-  getRouteFilter
+  getRouteFilter,
+  getDataByFilters,
+  getRouteFilters
 };
 

@@ -130,9 +130,51 @@ async function loginBySessionId(sessionId, res) {
     }
 }
 
+async function getInfoFilters({by,ids}, res) {
+  
+  if(by === 'shipping'){
+      return await dbMySQL('shipping_requests as s')
+      .whereIn('s.id', ids)
+      .where('s.status_id', 'asignado')
+      .whereNotNull('s.start_at')
+      .whereNotNull('s.end_at')
+      .whereNull('s.deleted_at')
+      .select('s.id', 's.folio as name', dbMySQL.raw(`? as \`by\``, [by]) );
+  }else if(by === 'carrier'){
+        return await dbMySQL('carriers as c')
+        .join('shipping_requests as s', 'c.id', 's.carrier_id')
+        .whereIn('s.carrier_id', ids)
+        .where('s.status_id', 'asignado')
+        .whereNotNull('s.start_at')
+        .whereNotNull('s.end_at')
+        .whereNull('s.deleted_at')
+        .select('c.id', 'c.name', dbMySQL.raw(`? as \`by\``, [by]) )
+        .groupBy('c.id', 'c.name');
+
+  } else {
+    return [];
+  }
+
+}
+
+async function carrierShippingsRoutes(id) {
+    const result = await dbMySQL('shipping_requests as s')
+    .where('s.carrier_id', id)
+    .where('s.status_id', 'asignado')
+    .whereNotNull('s.start_at')
+    .whereNotNull('s.end_at')
+    .whereNull('s.deleted_at')
+    .select('s.id');
+
+  const ids = result.map(row => row.id);
+  return ids;
+}
+
 module.exports = {
   login,
   refreshToken,
-  loginBySessionId
+  loginBySessionId,
+  getInfoFilters,
+  carrierShippingsRoutes
 };
 
