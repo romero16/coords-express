@@ -17,16 +17,25 @@ const server = http.createServer(app);
 
 //ESTABLECER AQUI SOLO LAS RUTAS AUTORIZADAS PARA PARA EL API
 app.use(cors({
-  // origin: '*',
-  origin: ['http://sharkargo.com.test', 'http://sharkargo.com'],
-  methods: ['GET', 'POST']
+  origin: [
+    'http://sharkargo.com.test',
+    'https://sharkargo.com.test',
+    'http://sharkargo.com',
+    'https://sharkargo.com'
+  ],
+ methods: ['GET', 'POST']
 }));
 
 //ESTABLECER AQUI SOLO LAS RUTAS AUTORIZADAS PARA LA RESPUESTA DEL SOCKET
 const io = socketIo(server,{
   cors: {
     // origin: "*",
-     origin: ['http://sharkargo.com.test', 'http://sharkargo.com'],
+    origin: [
+      'http://sharkargo.com.test',
+      'https://sharkargo.com.test',
+      'http://sharkargo.com',
+      'https://sharkargo.com'
+    ],
     methods: ["GET", "POST"]
   }
 });

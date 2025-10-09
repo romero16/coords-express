@@ -18,6 +18,7 @@ async function login(data, res) {
       .whereNotNull('sr.start_at')
       .whereNull('sr.end_at')
       .whereNull('u.deleted_at')
+      .whereNull('sr.deleted_at')
       .groupBy('u.id', 'u.email', 'u.password','cu.carrier_id', 'sr.id')
       .select(
         'u.id as user_id',
@@ -29,6 +30,8 @@ async function login(data, res) {
         dbMySQL.raw(`CONCAT('[', GROUP_CONCAT(CONCAT('"', r.name, '"')), ']') as roles`)
       )
       .first();
+
+      console.log(userResult);
     if (!userResult) {
        return res.status(HttpStatus.UNAUTHORIZED).json({statusCode: HttpStatus.UNAUTHORIZED,  message: 'Credenciales incorrectas, o sin viajes asignados!'});
     }
